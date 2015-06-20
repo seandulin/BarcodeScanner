@@ -132,15 +132,20 @@ exampleApp.factory('BarcodeService', function($cordovaBarcodeScanner, $q, DataSe
 exampleApp.factory('DataService', function($q, $http) {
   
   var baseUrl = 'http://barcodeapi.azurewebsites.net/';
-  
+  var successReponse = function(resp) {
+    return resp.data;
+  };
+  var errorResponse = function(error) {
+    console.log(error);
+  };
   return {
     getProductData: function(barcodeText) {
         
-      return $http.get(baseUrl + 'product/' + barcodeText);
+      return $http.get(baseUrl + 'product/' + barcodeText).then(successReponse, errorResponse);
     },
     getCouponData: function(barcodeText) {
         
-      return $http.get(baseUrl + 'coupon/' + barcodeText);
+      return $http.get(baseUrl + 'coupon/' + barcodeText).then(successReponse, errorResponse);
     }
   };
 });

@@ -66,6 +66,8 @@ exampleApp.controller("ProductController", function($scope, BarcodeService) {
         BarcodeService.scan('product').then(function(products) {
           
           $scope.products = products;
+        }, function(error) {
+          console.log(error);
         });
     };
 });
@@ -78,6 +80,8 @@ exampleApp.controller("CouponController", function($scope, BarcodeService) {
         BarcodeService.scan('coupon').then(function(coupons) {
           
           $scope.coupons = coupons;
+        }, function(error) {
+          console.log(error);
         });
     };
 });
@@ -120,7 +124,6 @@ exampleApp.factory('BarcodeService', function($cordovaBarcodeScanner, $q, DataSe
                 var products = DataService.getProductData(imageData.text);
                 var coupons = DataService.getCouponData(imageData.text);
                 return $q.all([products, coupons]).then(function (data) {
-                  console.log('done both');
                   return $q.when(data[0].concat(data[1]));
                 });
             }
@@ -130,35 +133,23 @@ exampleApp.factory('BarcodeService', function($cordovaBarcodeScanner, $q, DataSe
   
 });
 
-exampleApp.factory('DataService', function($q) {
-    
-    //TODO: add http calls
-    
+exampleApp.factory('DataService', function($q, $http) {
+  
+  var baseUrl = 'http://barcodeapi.azurewebsites.net/';
+  var successReponse = function(resp) {
+    return resp.data;
+  };
+  var errorResponse = function(error) {
+    console.log(error);
+  };
   return {
     getProductData: function(barcodeText) {
         
-      var deferred = $q.defer(); 
-      setTimeout(function() {
-          console.log('done product');
-          deferred.resolve([{
-             name: "Product 1",
-             upc: "12345-67890" 
-          }]);
-      }, 3000);
-      return deferred.promise;
+      return $http.get(baseUrl + 'product/' + barcodeText).then(successReponse, errorResponse);
     },
     getCouponData: function(barcodeText) {
         
-      var deferred = $q.defer();
-      setTimeout(function() {
-          console.log('done coupon');
-          deferred.resolve([{
-             name: "Coupon 1",
-             upc: "98765-43210" 
-          }]);
-      }, 1000); 
-      return deferred.promise;
+      return $http.get(baseUrl + 'coupon/' + barcodeText).then(successReponse, errorResponse);
     }
   };
-  
 });
