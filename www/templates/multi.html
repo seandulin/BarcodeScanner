@@ -1,8 +1,8 @@
 <ion-view title="Multi-item Scanner">
    <ion-content has-header="true" padding="true">
-        <button class="button" ng-click="scanBarcode()">Scan</button>
+        <button class="button button-block button-balanced" ng-click="scanBarcode()">Scan</button>
             
-            <div ng-hide="!items">
+    	<div ng-hide="!items">
             <ul>
                 <li ng-repeat="item in items">{{ item.name }} - {{ item.upc }}</li>
             </ul>
