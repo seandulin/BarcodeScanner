@@ -1,0 +1,11 @@
+<ion-view title="Product Scanner">
+   <ion-content has-header="true" padding="true">
+        <button class="button" ng-click="scanBarcode()">Scan</button>
+            
+        <div ng-hide="!products">
+            <ul>
+                <li ng-repeat="product in products">{{ product.name }} - {{ product.upc }}</li>
+            </ul>
+        </div>
+    </ion-content>
+</ion-view>
